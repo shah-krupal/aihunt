@@ -88,13 +88,13 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/');
+    res.redirect('https://producthunt-frontend.vercel.app/success');
   });
 
 app.post('/login',
   passport.authenticate('local', { failureRedirect: '/' }),
   (req, res) => {
-    res.redirect('/');
+    res.redirect('https://producthunt-frontend.vercel.app/success');
   });
 
   app.post('/logout', function(req, res, next) {
@@ -124,7 +124,7 @@ app.get('/protectedroute', isAuthenticated, (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Hello World. This is the root route. In case it is not clear, you are not authenticated.');
   });
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
