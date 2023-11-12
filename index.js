@@ -19,7 +19,8 @@ passport.use(
       {
         clientID: '752847050713-jkg2478vae1245abgmc34m963s2uvg6l.apps.googleusercontent.com',  //process.env.GOOGLE_CLIENT_ID,
     clientSecret: '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',   //process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+    // callbackURL: "http://localhost:3000/auth/google/callback",
+    callbackURL:"https://aihunt.vercel.app/auth/google/callback"
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
