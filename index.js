@@ -119,9 +119,8 @@ app.get('/auth/google',
   passport.authenticate('google', { failureRedirect: '/api/user' }),
   (req, res) => {
     // Custom callback logic
-    console.log('tryin callback')
     req.session.save(() => {
-      console.log('tried saving')
+      console.log(req.session + req.user)
     res.redirect('/protectedroute');});
   });
 
@@ -146,8 +145,7 @@ app.get('/api/user', (req, res) => {
 
 // Protect some routes with authentication middleware
 const isAuthenticated = (req, res, next) => {
-    console.log('req**************' + req.googleId)
-    console.log('isAuth//////////' + req.isAuthenticated())
+    console.log('req**************')
   if (req.isAuthenticated()) {
     return next();
   }
