@@ -37,6 +37,14 @@ app.use(cookieSession({
   httpOnly: true,
 }));
 
+app.use((req, res, next) => {
+  if (!req.session) {
+    req.session = {};
+  }
+  req.session.regenerate = () => {};
+  req.session.save = () => {};
+  next();
+});
 app.set('trust proxy', 1) // trust first proxy
 
 
