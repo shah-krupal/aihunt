@@ -8,6 +8,7 @@ const cors = require('cors');
 const sequelize = require('./config/database.js');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const Sessions = require('./Session');
+const cookieSession = require('cookie-session');
 
 
 const app = express();
