@@ -19,14 +19,22 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true, store: new SequelizeStore({
-  db: sequelize,
-  table: 'Session',
-}), cookie: {
-  httpOnly: true,
+// app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true, store: new SequelizeStore({
+//   db: sequelize,
+//   table: 'Session',
+// }), cookie: {
+//   httpOnly: true,
+//   secure: true, // Set to true in production if using HTTPS
+//   maxAge: 3600000, // Session duration in milliseconds
+// }, }));
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2'],
+  maxAge: 24 * 60 * 60 * 1000, // 24 hours
   secure: true, // Set to true in production if using HTTPS
-  maxAge: 3600000, // Session duration in milliseconds
-}, }));
+  httpOnly: true,
+}));
 
 app.set('trust proxy', 1) // trust first proxy
 
