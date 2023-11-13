@@ -133,11 +133,11 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get('/protectedroute', isAuthenticated, (req, res) => {
-  res.send('This is a protected route');
+  res.json('This is a protected route');
 });
 
 app.get('/', (req, res) => {
-    res.send('Hello World. This is the root route. In case it is not clear, you are not authenticated.');
+    res.json('Hello World. This is the root route. In case it is not clear, you are not authenticated.');
   });
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
