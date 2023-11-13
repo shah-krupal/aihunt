@@ -28,6 +28,7 @@ app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: tr
   maxAge: 3600000, // Session duration in milliseconds
 }, }));
 
+app.set('trust proxy', 1) // trust first proxy
 
 
 
@@ -39,8 +40,8 @@ passport.use(
     new GoogleStrategy(
       {
         clientID: '752847050713-jkg2478vae1245abgmc34m963s2uvg6l.apps.googleusercontent.com',  //process.env.GOOGLE_CLIENT_ID,
-    clientSecret: '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',   //process.env.GOOGLE_CLIENT_SECRET,
-    // callbackURL: "http://localhost:3000/auth/google/callback",
+        clientSecret: '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',   //process.env.GOOGLE_CLIENT_SECRET,
+        // callbackURL: "http://localhost:3000/auth/google/callback",
     callbackURL:"https://aihunt.vercel.app/auth/google/callback"
       },
       async (accessToken, refreshToken, profile, done) => {
@@ -55,6 +56,7 @@ passport.use(
               googleId: profile.id,
             });
           }
+          console.log('user' + user)
   
           return done(null, user);
         } catch (error) {
@@ -92,25 +94,35 @@ passport.use(
     done(null, user.email);
   });
   
-  passport.deserializeUser(async (email, done) => {
-    try {
-      const user = await User.findByPk(email);
-      return done(null, user);
-    } catch (error) {
-      return done(error);
-    }
+  // passport.deserializeUser(async (email, done) => {
+  //   try {
+  //     const user = await User.findByPk(email);
+  //     return done(null, user);
+  //   } catch (error) {
+  //     return done(error);
+  //   }
+  // });
+
+  passport.deserializeUser(function(email, done) {
+    User.findByPk(email, function(err, user) {
+        done(err, user);
+    });
   });
+  
 
 
 // Routes
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/' }),
+  app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/api/user' }),
   (req, res) => {
-    console.log('req' + req)
-    res.redirect('https://producthunt-frontend.vercel.app/success');
+    // Custom callback logic
+    console.log('tryin callback')
+    req.session.save(() => {
+      console.log('tried saving')
+    res.redirect('/protectedroute');});
   });
 
 app.post('/login',
@@ -134,8 +146,8 @@ app.get('/api/user', (req, res) => {
 
 // Protect some routes with authentication middleware
 const isAuthenticated = (req, res, next) => {
-    console.log('req' + req)
-    console.log('isAuth' + req.isAuthenticated)
+    console.log('req**************' + req.googleId)
+    console.log('isAuth//////////' + req.isAuthenticated())
   if (req.isAuthenticated()) {
     return next();
   }
@@ -144,7 +156,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get('/protectedroute', isAuthenticated, (req, res) => {
-  console.log(req)
+  console.log('*/*/*/*/*/*/*/*/*/*/' + req)
   res.json('This is a protected route');
 });
 
