@@ -16,7 +16,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true,cookie: {
+  httpOnly: true,
+  secure: true, // Set to true in production if using HTTPS
+  maxAge: 3600000, // Session duration in milliseconds
+}, }));
 
 // Passport middleware
 app.use(passport.initialize());
