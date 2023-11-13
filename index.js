@@ -4,9 +4,17 @@ const session = require('express-session');
 const User = require('./User');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
+const cors = require('cors');
 
 
 const app = express();
+const corsOptions = {
+  origin: 'https://producthunt-frontend.vercel.app', // Replace with your frontend's actual domain
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Enable set cookie
+};
+
+app.use(cors(corsOptions));
 
 app.use(session({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 
@@ -98,6 +106,7 @@ app.post('/login',
   });
 
   app.post('/logout', function(req, res, next) {
+    console.log('tryin logout')
     req.logout(function(err) {
       if (err) { return next(err); }
       res.redirect('/');
