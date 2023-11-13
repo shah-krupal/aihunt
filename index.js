@@ -109,6 +109,7 @@ app.get('/auth/google',
 app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
+    console.log('req' + req)
     res.redirect('https://producthunt-frontend.vercel.app/success');
   });
 
@@ -133,7 +134,8 @@ app.get('/api/user', (req, res) => {
 
 // Protect some routes with authentication middleware
 const isAuthenticated = (req, res, next) => {
-    console.log(req)
+    console.log('req' + req)
+    console.log('isAuth' + req.isAuthenticated)
   if (req.isAuthenticated()) {
     return next();
   }
@@ -142,6 +144,7 @@ const isAuthenticated = (req, res, next) => {
 };
 
 app.get('/protectedroute', isAuthenticated, (req, res) => {
+  console.log(req)
   res.json('This is a protected route');
 });
 
